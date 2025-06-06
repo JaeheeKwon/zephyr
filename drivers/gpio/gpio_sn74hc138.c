@@ -95,6 +95,8 @@ static DEVICE_API(gpio, ti_sn74hc138_drv_api_funcs) = {
  */
 static int ti_sn74hc138_init(const struct device *dev)
 {
+	int ret;
+
 	const struct ti_sn74hc138_gpio_config *config = dev->config;
 
 	gpio_pin_configure_dt(&config->input_a_gpio, GPIO_OUTPUT_HIGH);
