@@ -81,17 +81,23 @@
 			compatible = "sitronix,st7789v";
 			reg = <0>;
 			mipi-max-frequency = <20000000>;
+// The following parameters are for the display in vertical mode
+			// width = <135>;
+			// height = <240>;
+			// x-offset = <53>;
+			// y-offset = <40>;
 
-			width = <135>;
-			height = <240>;
-			x-offset = <53>;
-			y-offset = <40>;
-
+// The following parameters are for the display in landscape mode
+			width = <240>;
+			height = <135>;
+			x-offset = <40>;
+			y-offset = <53>;
 			vcom = <0x28>;
 			gctrl = <0x35>;
 			vrhs = <0x10>;
 			vdvs = <0x20>;
-			mdac = <0x00>;
+			// mdac = <0x00>;
+			mdac = <0x60>;  // rotates by 270 degrees
 			gamma = <0x01>;
 			colmod = <0x55>;
 			lcm = <0x2c>;
