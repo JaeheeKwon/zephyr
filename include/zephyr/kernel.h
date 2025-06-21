@@ -1488,13 +1488,13 @@ const char *k_thread_state_str(k_tid_t thread_id, char *buf, size_t buf_size);
  * This macro generates a timeout delay that represents an expiration
  * at the absolute uptime value specified, in system ticks.  That is, the
  * timeout will expire immediately after the system uptime reaches the
- * specified tick count.
+ * specified tick count. Value is clamped to the range 0 to INT64_MAX-1.
  *
  * @param t Tick uptime value
  * @return Timeout delay value
  */
 #define K_TIMEOUT_ABS_TICKS(t) \
-	Z_TIMEOUT_TICKS(Z_TICK_ABS((k_ticks_t)MAX(t, 0)))
+	Z_TIMEOUT_TICKS(Z_TICK_ABS((k_ticks_t)CLAMP(t, 0, (INT64_MAX - 1))))
 
 /**
  * @brief Generates an absolute/uptime timeout value from seconds
@@ -5854,6 +5854,17 @@ void k_heap_free(struct k_heap *h, void *mem) __attribute_nonnull(1);
 #define K_HEAP_DEFINE_NOCACHE(name, bytes)			\
 	Z_HEAP_DEFINE_IN_SECT(name, bytes, __nocache)
 
+/** @brief Get the array of statically defined heaps
+ *
+ * Returns the pointer to the start of the static heap array.
+ * Static heaps are those declared through one of the `K_HEAP_DEFINE`
+ * macros.
+ *
+ * @param heap Pointer to location where heap array address is written
+ * @return Number of static heaps
+ */
+int k_heap_array_get(struct k_heap **heap);
+
 /**
  * @}
  */
@@ -6346,7 +6357,7 @@ static inline void k_cpu_atomic_idle(unsigned int key)
  * This should be called when a thread has encountered an unrecoverable
  * runtime condition and needs to terminate. What this ultimately
  * means is determined by the _fatal_error_handler() implementation, which
- * will be called will reason code K_ERR_KERNEL_OOPS.
+ * will be called with reason code K_ERR_KERNEL_OOPS.
  *
  * If this is called from ISR context, the default system fatal error handler
  * will treat it as an unrecoverable system error, just like k_panic().
@@ -6359,7 +6370,7 @@ static inline void k_cpu_atomic_idle(unsigned int key)
  * This should be called when the Zephyr kernel has encountered an
  * unrecoverable runtime condition and needs to terminate. What this ultimately
  * means is determined by the _fatal_error_handler() implementation, which
- * will be called will reason code K_ERR_KERNEL_PANIC.
+ * will be called with reason code K_ERR_KERNEL_PANIC.
  */
 #define k_panic()	z_except_reason(K_ERR_KERNEL_PANIC)
 

@@ -144,7 +144,7 @@ manifest:
       groups:
         - fs
     - name: hal_adi
-      revision: f8f65473168a4e9f71f20c0c5387f6b80fe54cf3
+      revision: 16829b77264678f31a2d077a870af7bdca2d39bd
       path: modules/hal/adi
       groups:
         - hal
@@ -169,7 +169,7 @@ manifest:
     #   groups:
     #     - hal
     - name: hal_espressif
-      revision: f57f1b1e6e2178a2afe4ec37ffb5fb1eb021e354
+      revision: e74df076fabc5f944900e02c1884282aeb60dad1
       path: modules/hal/espressif
       west-commands: west/west-commands.yml
       groups:
@@ -245,7 +245,7 @@ manifest:
       groups:
         - hal
     - name: hal_stm32
-      revision: 5cbc642b1a79d4f373b1587f8c3027f31bf0d30c
+      revision: 468e5ad450a75d4baa3eed80e4f77a7700b71203
       path: modules/hal/stm32
       groups:
         - hal
@@ -281,7 +281,7 @@ manifest:
         - hal
     - name: hostap
       path: modules/lib/hostap
-      revision: 8412f4b23b6267ee6035d25515a23aaf243f6ad7
+      revision: cf270006050cf944af699301c7f4de2b427cd862
     - name: liblc3
       revision: 48bbd3eacd36e99a57317a0a4867002e0b09e183
       path: modules/lib/liblc3
@@ -289,7 +289,7 @@ manifest:
       revision: b97860e78998551af99931ece149eeffc538bdb1
       path: modules/lib/libmctp
     - name: libmetal
-      revision: 14f519529a1e4a46aaea6826f5a41d99a3347276
+      revision: 91d38634d1882f0a2151966f8c5c230ce1c0de7b
       path: modules/hal/libmetal
       groups:
         - hal
@@ -302,7 +302,7 @@ manifest:
     #   revision: fb00b383072518c918e2258b0916c996f2d4eebe
     #   path: modules/lib/loramac-node
     - name: lvgl
-      revision: 1ed1ddd881c3784049a92bb9fe37c38c6c74d998
+      revision: b03edc8e6282a963cd312cd0b409eb5ce263ea75
       path: modules/lib/gui/lvgl
     - name: mbedtls
       revision: 5f889934359deccf421554c7045a8381ef75298f
@@ -310,7 +310,7 @@ manifest:
       groups:
         - crypto
     - name: mcuboot
-      revision: 990b1fcb367e27056b282f183e819964fdbfe907
+      revision: 11982df962e2314f4e0c73b7ebc17172026c9266
       path: bootloader/mcuboot
       groups:
         - bootloader
@@ -331,7 +331,7 @@ manifest:
     #   revision: 0cd7f28d34a5279cd839940c199658a294165722
     #   path: modules/lib/nrf_wifi
     - name: open-amp
-      revision: f7f4d083c7909a39d86e217376c69b416ec4faf3
+      revision: c30a6d8b92fcebdb797fc1a7698e8729e250f637
       path: modules/lib/open-amp
     - name: openthread
       revision: 3ae741f95e7dfb391dec35c48742862049eb62e8
