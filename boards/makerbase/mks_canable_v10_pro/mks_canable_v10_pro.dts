@@ -1,0 +1,96 @@
+/*
+ * Copyright (c) 2024 Alexander Kozhinov <ak.alexander.kozhinov@gmail.com>
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+#include <st/f0/stm32f072Xb.dtsi>
+#include <st/f0/stm32f072r(8-b)tx-pinctrl.dtsi>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+/ {
+	model = "Makerbase MKS CANable V1.0 Pro";
+	compatible = "makerbase,mks-canable-v10_pro";
+
+	chosen {
+		zephyr,console = &usart1;
+		zephyr,shell-uart = &usart1;
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,canbus = &can1;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led_1: led_1 {
+			gpios = <&gpioa 0 GPIO_ACTIVE_HIGH>;
+			label = "User LD1";
+		};
+
+		led_2: led_2 {
+			gpios = <&gpioa 1 GPIO_ACTIVE_HIGH>;
+			label = "User LD2";
+		};
+	};
+
+	aliases {
+		led0 = &led_1;
+		led1 = &led_1;
+		led2 = &led_2;
+		watchdog0 = &iwdg;
+	};
+};
+
+// &clk_lse {
+// 	status = "okay";
+// };
+
+&clk_hsi {
+	status = "okay";
+};
+
+// &clk_hse {
+// 	hse-bypass;
+// 	clock-frequency = <DT_FREQ_M(8)>; /* STLink 8MHz clock */
+// 	status = "okay";
+// };
+
+&pll {
+	prediv = <1>;
+	mul = <6>;
+	clocks = <&clk_hsi>;
+	status = "okay";
+};
+
+&rcc {
+	clocks = <&pll>;
+	clock-frequency = <DT_FREQ_M(48)>;
+	ahb-prescaler = <1>;
+	apb1-prescaler = <1>;
+};
+
+&can1 {
+	pinctrl-0 = <&can_rx_pb8 &can_tx_pb9>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&iwdg {
+	status = "okay";
+};
+
+&timers3 {
+	st,prescaler = <10000>;
+	status = "okay";
+};
+
+zephyr_udc0: &usb {
+	pinctrl-0 = <&usb_dm_pa11 &usb_dp_pa12>;
+	pinctrl-names = "default";
+	clocks = <&rcc STM32_CLOCK(APB1, 23U)>;
+	status = "okay";
+	cdc_acm_uart0 {
+		compatible = "zephyr,cdc-acm-uart";
+	};
+};
