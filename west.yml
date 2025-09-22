@@ -143,11 +143,11 @@ manifest:
       path: modules/fs/fatfs
       groups:
         - fs
-    - name: hal_adi
-      revision: eeb155f7382343438114605963ae64436cc53434
-      path: modules/hal/adi
-      groups:
-        - hal
+    # - name: hal_adi
+    #   revision: d2886b8b8e3f71058a221f6351a8200fba80f229
+    #   path: modules/hal/adi
+    #   groups:
+    #     - hal
     # - name: hal_afbr
     #   revision: 4e1eea7ea283db9d9ce529b0e9f89c0b5c2660e3
     #   path: modules/hal/afbr
