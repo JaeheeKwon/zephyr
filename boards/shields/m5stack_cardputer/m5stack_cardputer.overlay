@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <zephyr/dt-bindings/input/input-event-codes.h>
 
 / {
 	zephyr,user {
@@ -15,6 +16,56 @@
 
 	chosen {
 		zephyr,display = &st7789v;
+	};
+
+	gpio_keys {
+		compatible = "gpio-keys";
+
+		// Button "G0"
+		user_button_1: button_1 {
+			label = "User button 1";
+			gpios = <&m5stack_stamps3_header 18 GPIO_ACTIVE_LOW>;
+			zephyr,code = <INPUT_KEY_0>;
+		};
+
+	};
+
+	sn74hc138: sn74hc138@0 {
+		compatible = "ti,sn74hc138";
+		status = "okay";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg = <0 0x01>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		ngpios = <8>;
+		input-a-gpios = <&m5stack_stamps3_header 7 GPIO_ACTIVE_HIGH>;
+		input-b-gpios = <&m5stack_stamps3_header 8 GPIO_ACTIVE_HIGH>;
+		input-c-gpios = <&m5stack_stamps3_header 11 GPIO_ACTIVE_HIGH>;
+	};
+
+	kbd-matrix {
+		compatible = "gpio-kbd-matrix";
+		status = "okay";
+		row-gpios = <&m5stack_stamps3_header 14 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+								<&m5stack_stamps3_header 16 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+								<&m5stack_stamps3_header 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+								<&m5stack_stamps3_header 3 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+								<&m5stack_stamps3_header 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+								<&m5stack_stamps3_header 5 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+								<&m5stack_stamps3_header 6 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		col-gpios = <&sn74hc138 0 GPIO_ACTIVE_HIGH>,
+								<&sn74hc138 1 GPIO_ACTIVE_HIGH>,
+								<&sn74hc138 2 GPIO_ACTIVE_HIGH>,
+								<&sn74hc138 3 GPIO_ACTIVE_HIGH>,
+								<&sn74hc138 4 GPIO_ACTIVE_HIGH>,
+								<&sn74hc138 5 GPIO_ACTIVE_HIGH>,
+								<&sn74hc138 6 GPIO_ACTIVE_HIGH>,
+								<&sn74hc138 7 GPIO_ACTIVE_HIGH>;
+		col-drive-inactive;
+		idle-mode = "scan";
+		//poll-period-ms = < 500 >;
+		poll-timeout-ms = < 0 >;
 	};
 
 	mipi_dbi {
@@ -30,17 +81,23 @@
 			compatible = "sitronix,st7789v";
 			reg = <0>;
 			mipi-max-frequency = <20000000>;
+// The following parameters are for the display in vertical mode
+			// width = <135>;
+			// height = <240>;
+			// x-offset = <53>;
+			// y-offset = <40>;
 
-			width = <135>;
-			height = <240>;
-			x-offset = <53>;
-			y-offset = <40>;
-
+// The following parameters are for the display in landscape mode
+			width = <240>;
+			height = <135>;
+			x-offset = <40>;
+			y-offset = <53>;
 			vcom = <0x28>;
 			gctrl = <0x35>;
 			vrhs = <0x10>;
 			vdvs = <0x20>;
-			mdac = <0x00>;
+			// mdac = <0x00>;
+			mdac = <0x60>;  // rotates by 270 degrees
 			gamma = <0x01>;
 			colmod = <0x55>;
 			lcm = <0x2c>;
