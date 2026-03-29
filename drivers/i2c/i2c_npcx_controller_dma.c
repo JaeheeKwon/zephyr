@@ -107,7 +107,7 @@ size_t i2c_ctrl_dma_proceed_read(const struct device *dev)
 
 	/* Last byte for NACK in received transaction */
 	if (i2c_ctrl_dma_is_last_pkg(dev, dma_lens) && (data->msg->flags & I2C_MSG_STOP) != 0) {
-		/* Issue NACK in the end of DMA transation */
+		/* Issue NACK in the end of DMA transaction */
 		i2c_ctrl_dma_nack(dev);
 	}
 
@@ -115,6 +115,13 @@ size_t i2c_ctrl_dma_proceed_read(const struct device *dev)
 	i2c_ctrl_dma_start(dev, data->ptr_msg, dma_lens);
 
 	return dma_lens;
+}
+
+void i2c_ctrl_stop(const struct device *dev)
+{
+	struct smb_reg *const inst = HAL_I2C_INSTANCE(dev);
+
+	inst->SMBCTL1 |= BIT(NPCX_SMBCTL1_STOP);
 }
 
 /* I2C controller recover function in `DMA` mode */

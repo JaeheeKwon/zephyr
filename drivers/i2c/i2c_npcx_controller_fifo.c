@@ -134,13 +134,27 @@ static inline int i2c_ctrl_fifo_rx_occupied(const struct device *dev)
 	return inst->SMBRXF_STS & 0x3f;
 }
 
+void i2c_ctrl_stop(const struct device *dev)
+{
+	struct smb_reg *const inst = HAL_I2C_INSTANCE(dev);
+	struct i2c_ctrl_data *const data = dev->data;
+	uint32_t delay_cycle = data->stop_dealy_cycle_time;
+	uint32_t delay_start = k_cycle_get_32();
+
+	while (k_cycle_get_32() - delay_start < delay_cycle) {
+		arch_nop();
+	}
+
+	inst->SMBCTL1 |= BIT(NPCX_SMBCTL1_STOP);
+}
+
 /* I2C controller `FIFO` interrupt functions */
 void i2c_ctrl_handle_write_int_event(const struct device *dev)
 {
 	struct i2c_ctrl_data *const data = dev->data;
 
 	/* START condition is issued */
-	if (data->oper_state == NPCX_I2C_WAIT_START) {
+	if (data->oper_state == NPCX_I2C_WAIT_START || data->oper_state == NPCX_I2C_WAIT_RESTART) {
 		/* Write slave address with W bit */
 		i2c_ctrl_data_write(dev, ((data->addr << 1) & ~BIT(0)));
 		/* Start to proceed write process */
@@ -185,7 +199,16 @@ void i2c_ctrl_handle_write_int_event(const struct device *dev)
 				data->msg = msg;
 				data->ptr_msg = msg->buf;
 				if ((msg->flags & I2C_MSG_RW_MASK) == I2C_MSG_WRITE) {
-					data->oper_state = NPCX_I2C_WRITE_DATA;
+					/*
+					 * For a special sequence that requires a Repeat-Start
+					 * condition between two "Write" messages.
+					 */
+					if (msg->flags & I2C_MSG_RESTART) {
+						data->oper_state = NPCX_I2C_WAIT_RESTART;
+						i2c_ctrl_start(dev);
+					} else {
+						data->oper_state = NPCX_I2C_WRITE_DATA;
+					}
 				} else {
 					data->is_write = 0;
 					data->oper_state = NPCX_I2C_WAIT_RESTART;
