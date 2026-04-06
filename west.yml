@@ -212,11 +212,11 @@ manifest:
     #   path: modules/hal/nuvoton
     #   groups:
     #     - hal
-    # - name: hal_nxp
-    #   revision: bcab469190b4302bb2f78cc20768f1c719595cba
-    #   path: modules/hal/nxp
-    #   groups:
-    #     - hal
+    - name: hal_nxp
+      revision: bcab469190b4302bb2f78cc20768f1c719595cba
+      path: modules/hal/nxp
+      groups:
+        - hal
     # - name: hal_openisa
     #   revision: eabd530a64d71de91d907bad257cd61aacf607bc
     #   path: modules/hal/openisa
